@@ -1,0 +1,14 @@
+services:
+  database:
+    image: "postgres:18"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: briefing_user
+      POSTGRES_PASSWORD: briefing_password
+      POSTGRES_DB: briefing_db
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:
