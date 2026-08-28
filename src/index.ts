@@ -1,8 +1,11 @@
 import { createApp } from "./app";
+import { loadConfig } from "./config";
 import { createRouter } from "./router";
 import { createServer } from "./server";
 
-const port = 3000;
+const config = loadConfig();
+
+const { port } = config;
 const router = createRouter();
 const app = createApp({ router });
 const server = createServer({ app, port });
