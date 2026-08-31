@@ -5,14 +5,16 @@ export const createRouter = (): Router => {
 
   router.get("/", (req, res) => {
     res.send(`<!DOCTYPE html>
-    <html>
-    <head>
-    <title>My Page</title>
-    </head>
-    <body>
-    Hello, world!
-    </body>
-    </html>`);
+<html>
+  <head>
+    <link rel="stylesheet" href="/assets/styles.css">
+    <script src="/assets/app.js" defer></script>
+  </head>
+  <body>
+    <h1>Hello</h1>
+    <button>Test JS</button>
+  </body>
+</html>`);
   });
 
   return router;

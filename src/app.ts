@@ -7,6 +7,7 @@ interface AppDependencies {
 export const createApp = ({ router }: AppDependencies): Express => {
   const app = express();
   app.use(express.json());
+  app.use(express.static("public"));
   app.use(router);
   return app;
 };
