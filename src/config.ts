@@ -1,4 +1,4 @@
-import { isLogLevel, LOG_LEVELS, type LogLevel } from "./logger";
+import { isLogLevel, LOG_LEVELS, type LogLevel } from "./logger.js";
 
 export interface Config {
   port: number;
