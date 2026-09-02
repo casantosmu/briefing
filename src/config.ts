@@ -1,13 +1,19 @@
 import { isLogLevel, LOG_LEVELS, type LogLevel } from "./logger.js";
 
 export interface Config {
-  port: number;
   logLevel: LogLevel;
+  postgresUrl: string;
+  port: number;
 }
 
 export const loadConfig = (): Config => {
-  const port = Number(process.env.PORT ?? 3000);
   const logLevel = process.env.LOG_LEVEL ?? "info";
+  const postgresUrl = process.env.DATABASE_URL;
+  const port = Number(process.env.PORT ?? 3000);
+
+  if (!postgresUrl) {
+    throw new Error("DATABASE_URL is required");
+  }
 
   if (!isLogLevel(logLevel)) {
     throw new Error(`LOG_LEVEL must be one of: ${LOG_LEVELS.join(", ")}`);
@@ -17,5 +23,5 @@ export const loadConfig = (): Config => {
     throw new Error("PORT must be an integer between 1 and 65535");
   }
 
-  return { port, logLevel };
+  return { logLevel, postgresUrl, port };
 };
