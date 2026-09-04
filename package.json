@@ -8,7 +8,9 @@
   },
   "scripts": {
     "dev": "tsx --env-file=.env --watch --inspect src/index.ts | pino-pretty --messageKey message",
+    "dev:client": "esbuild client/index.ts --bundle --format=esm --target=es2022 --sourcemap --watch --outfile=public/assets/app.js",
     "build": "tsc -p tsconfig.build.json",
+    "build:client": "esbuild client/index.ts --bundle --format=esm --target=es2022 --minify --outfile=public/assets/app.js",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier . --write"

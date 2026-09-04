@@ -9,8 +9,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => (
     <head>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link rel="stylesheet" href="/assets/styles.css" />
-      <script src="/assets/app.js" defer />
+      <script type="module" src="/assets/app.js" />
     </head>
     <body>{children}</body>
   </html>
