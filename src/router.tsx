@@ -1,4 +1,4 @@
-import { type Response,Router } from "express";
+import { type Response, Router } from "express";
 import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
@@ -8,13 +8,21 @@ import { HomePage } from "./views/pages/HomePage.js";
 export const createRouter = (): Router => {
   const router = Router();
 
+  let count = 0;
+
   router.get("/", (req, res) => {
     sendPage(
       res,
       <MainLayout>
-        <HomePage />
+        <HomePage count={count} />
       </MainLayout>,
     );
+  });
+
+  router.post("/counter", (_req, res) => {
+    count += 1;
+
+    sendAction(res, "counter", <HomePage count={count} />);
   });
 
   return router;
@@ -22,4 +30,11 @@ export const createRouter = (): Router => {
 
 const sendPage = (res: Response, node: ReactNode) => {
   res.type("html").send(`<!doctype html>${renderToStaticMarkup(node)}`);
+};
+
+const sendAction = (res: Response, component: string, node: ReactNode) => {
+  res.json({
+    component,
+    html: renderToStaticMarkup(node),
+  });
 };
