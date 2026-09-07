@@ -1,6 +1,6 @@
 import pino, { type Logger as PinoLogger } from "pino";
 
-import type { Logger, LogLevel } from "./logger.js";
+import type { Logger, LogLevel } from "./core/logger.js";
 
 interface CreatePinoLoggerOptions {
   level?: LogLevel;

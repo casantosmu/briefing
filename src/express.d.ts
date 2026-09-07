@@ -1,4 +1,4 @@
-import type { Logger } from "./logger.js";
+import type { Logger } from "./core/logger.js";
 
 declare global {
   namespace Express {
