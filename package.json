@@ -7,11 +7,16 @@
     "node": "^26.0.0"
   },
   "scripts": {
-    "dev": "tsx --env-file=.env --watch --inspect src/index.ts | pino-pretty --messageKey message",
+    "migrate": "tsx --env-file=.env src/entrypoints/migrate/index.ts | pino-pretty --messageKey message",
+    "dev": "concurrently \"npm run dev:web\" \"npm run dev:client\"",
+    "dev:web": "tsx --env-file=.env --watch --inspect src/entrypoints/web/index.ts | pino-pretty --messageKey message",
     "dev:client": "esbuild client/index.ts --bundle --format=esm --target=es2022 --sourcemap --watch --outfile=public/assets/app.js",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "rm -fr dist && npm run build:web && npm run build:client",
+    "build:web": "tsc -p tsconfig.build.json",
     "build:client": "esbuild client/index.ts --bundle --format=esm --target=es2022 --minify --outfile=public/assets/app.js",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "npm run typecheck:web && npm run typecheck:client",
+    "typecheck:web": "tsc -p tsconfig.build.json --noEmit",
+    "typecheck:client": "tsc -p client/tsconfig.json",
     "lint": "eslint .",
     "format": "prettier . --write"
   },
@@ -31,6 +36,7 @@
     "@types/pg": "^8.23.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
+    "concurrently": "^10.0.5",
     "eslint": "^10.9.1",
     "eslint-plugin-simple-import-sort": "^14.0.0",
     "pino-pretty": "^13.1.3",

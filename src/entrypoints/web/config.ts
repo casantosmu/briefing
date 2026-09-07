@@ -1,4 +1,4 @@
-import { isLogLevel, LOG_LEVELS, type LogLevel } from "./core/logger.js";
+import { isLogLevel, LOG_LEVELS, type LogLevel } from "../../core/logger.js";
 
 export interface Config {
   logLevel: LogLevel;
