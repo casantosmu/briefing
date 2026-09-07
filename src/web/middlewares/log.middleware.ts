@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 
 import type { RequestHandler } from "express";
 
-import type { Logger } from "../core/logger.js";
+import type { Logger } from "../../core/logger.js";
 
 interface LogMiddlewareDependencies {
   logger: Logger;

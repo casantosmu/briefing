@@ -1,9 +1,9 @@
 import { Pool } from "pg";
 
-import { createApp } from "../../app.js";
 import { createPinoLogger } from "../../logger.pino.js";
-import { createRouter } from "../../router.js";
-import { createServer } from "../../server.js";
+import { createApp } from "../../web/app.js";
+import { createRouter } from "../../web/router.js";
+import { createServer } from "../../web/server.js";
 import { loadConfig } from "./config.js";
 
 const config = loadConfig();

@@ -2,7 +2,7 @@ import path from "node:path";
 
 import express, { type Express, type Router } from "express";
 
-import type { Logger } from "./core/logger.js";
+import type { Logger } from "../core/logger.js";
 import { createLogMiddleware } from "./middlewares/log.middleware.js";
 
 const assetsPath = path.join(process.cwd(), "public/assets");
