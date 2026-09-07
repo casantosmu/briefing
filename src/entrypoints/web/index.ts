@@ -12,7 +12,12 @@ const logger = createPinoLogger({ level: config.logLevel });
 
 const pool = new Pool({ connectionString: config.postgresUrl });
 
-const router = createRouter();
+const router = createRouter({
+  sourceId: config.sourceId,
+  userId: config.userId,
+  defaultLocale: config.defaultLocale,
+  defaultTimezone: config.defaultTimezone,
+});
 const app = createApp({ logger, router });
 const server = createServer({ app, port: config.port });
 

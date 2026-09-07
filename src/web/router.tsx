@@ -5,7 +5,15 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { MainLayout } from "./views/layouts/MainLayout.js";
 import { HomePage } from "./views/pages/HomePage.js";
 
-export const createRouter = (): Router => {
+interface RouterDependencies {
+  sourceId: string;
+  userId: string;
+  defaultLocale: string;
+  defaultTimezone: string;
+}
+
+// eslint-disable-next-line no-empty-pattern
+export const createRouter = ({}: RouterDependencies): Router => {
   const router = Router();
 
   let count = 0;

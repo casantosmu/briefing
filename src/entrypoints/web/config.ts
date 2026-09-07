@@ -1,18 +1,34 @@
 import { isLogLevel, LOG_LEVELS, type LogLevel } from "../../core/logger.js";
 
 export interface Config {
+  sourceId: string;
+  userId: string;
+  defaultLocale: string;
+  defaultTimezone: string;
   logLevel: LogLevel;
   postgresUrl: string;
   port: number;
 }
 
 export const loadConfig = (): Config => {
+  const sourceId = process.env.SOURCE_ID;
+  const userId = process.env.USER_ID;
+  const defaultLocale = process.env.DEFAULT_LOCALE ?? "en-US";
+  const defaultTimezone = process.env.DEFAULT_TIMEZONE ?? "UTC";
   const logLevel = process.env.LOG_LEVEL ?? "info";
   const postgresUrl = process.env.DATABASE_URL;
   const port = Number(process.env.PORT ?? 3000);
 
   if (!postgresUrl) {
     throw new Error("DATABASE_URL is required");
+  }
+
+  if (!sourceId) {
+    throw new Error("SOURCE_ID is required");
+  }
+
+  if (!userId) {
+    throw new Error("USER_ID is required");
   }
 
   if (!isLogLevel(logLevel)) {
@@ -23,5 +39,5 @@ export const loadConfig = (): Config => {
     throw new Error("PORT must be an integer between 1 and 65535");
   }
 
-  return { logLevel, postgresUrl, port };
+  return { sourceId, userId, defaultLocale, defaultTimezone, logLevel, postgresUrl, port };
 };
