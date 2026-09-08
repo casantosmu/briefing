@@ -2,35 +2,49 @@ import { type Response, Router } from "express";
 import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import { MainLayout } from "./views/layouts/MainLayout.js";
-import { HomePage } from "./views/pages/HomePage.js";
+import type { FeedRepository } from "../core/feed-repository.js";
+import { createPagination } from "../core/pagination.js";
+import { feedQuerySchema } from "./schemas.js";
+import { MainLayout } from "./views/layout/MainLayout.js";
+import { FeedPage } from "./views/pages/FeedPage.js";
 
 interface RouterDependencies {
   sourceId: string;
   userId: string;
   defaultLocale: string;
   defaultTimezone: string;
+  feedRepository: FeedRepository;
 }
 
-// eslint-disable-next-line no-empty-pattern
-export const createRouter = ({}: RouterDependencies): Router => {
+export const createRouter = ({
+  userId,
+  defaultLocale,
+  defaultTimezone,
+  feedRepository,
+}: RouterDependencies): Router => {
   const router = Router();
 
-  let count = 0;
-
   router.get("/", (req, res) => {
-    sendPage(
-      res,
-      <MainLayout>
-        <HomePage count={count} />
-      </MainLayout>,
-    );
+    res.redirect("/feed");
   });
 
-  router.post("/counter", (_req, res) => {
-    count += 1;
+  router.get("/feed", async (req, res) => {
+    const { page, limit } = feedQuerySchema.parse(req.query);
 
-    sendAction(res, "counter", <HomePage count={count} />);
+    const feedPage = await feedRepository.findMany(userId, { page, limit });
+    const pagination = createPagination(feedPage.count, { page, limit });
+
+    sendPage(
+      res,
+      <MainLayout title="Feed">
+        <FeedPage
+          feedArticles={feedPage.articles}
+          pagination={pagination}
+          locale={defaultLocale}
+          timezone={defaultTimezone}
+        />
+      </MainLayout>,
+    );
   });
 
   return router;
@@ -38,11 +52,4 @@ export const createRouter = ({}: RouterDependencies): Router => {
 
 const sendPage = (res: Response, node: ReactNode) => {
   res.type("html").send(`<!doctype html>${renderToStaticMarkup(node)}`);
-};
-
-const sendAction = (res: Response, component: string, node: ReactNode) => {
-  res.json({
-    component,
-    html: renderToStaticMarkup(node),
-  });
 };

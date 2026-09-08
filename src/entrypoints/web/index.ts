@@ -1,5 +1,6 @@
 import { Pool } from "pg";
 
+import { createFeedPostgres } from "../../db/feed.postgres.js";
 import { createPinoLogger } from "../../logger.pino.js";
 import { createApp } from "../../web/app.js";
 import { createRouter } from "../../web/router.js";
@@ -11,12 +12,14 @@ const config = loadConfig();
 const logger = createPinoLogger({ level: config.logLevel });
 
 const pool = new Pool({ connectionString: config.postgresUrl });
+const feedRepository = createFeedPostgres({ pool });
 
 const router = createRouter({
   sourceId: config.sourceId,
   userId: config.userId,
   defaultLocale: config.defaultLocale,
   defaultTimezone: config.defaultTimezone,
+  feedRepository,
 });
 const app = createApp({ logger, router });
 const server = createServer({ app, port: config.port });
