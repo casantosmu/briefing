@@ -8,6 +8,7 @@
   },
   "scripts": {
     "migrate": "tsx --env-file=.env src/entrypoints/migrate/index.ts | pino-pretty --messageKey message",
+    "sync": "tsx --env-file=.env src/entrypoints/sync/index.ts | pino-pretty --messageKey message",
     "dev": "concurrently \"npm run dev:web\" \"npm run dev:browser\"",
     "dev:web": "tsx --env-file=.env --watch --inspect src/entrypoints/web/index.ts | pino-pretty --messageKey message",
     "dev:browser": "esbuild browser/index.ts --bundle --format=esm --target=es2022 --sourcemap --watch --outfile=public/assets/app.js",

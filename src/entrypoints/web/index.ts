@@ -15,7 +15,6 @@ const pool = new Pool({ connectionString: config.postgresUrl });
 const feedRepository = createFeedPostgres({ pool });
 
 const router = createRouter({
-  sourceId: config.sourceId,
   userId: config.userId,
   defaultLocale: config.defaultLocale,
   defaultTimezone: config.defaultTimezone,

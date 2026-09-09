@@ -9,7 +9,6 @@ import { MainLayout } from "./views/layout/MainLayout.js";
 import { FeedPage } from "./views/pages/FeedPage.js";
 
 interface RouterDependencies {
-  sourceId: string;
   userId: string;
   defaultLocale: string;
   defaultTimezone: string;
