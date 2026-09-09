@@ -12,5 +12,7 @@ export const formatReadingTime = (wordCount: number): string => {
 };
 
 export const htmlToText = (value: string) => {
-  return htmlToTextLib(value);
+  return htmlToTextLib(value, {
+    selectors: [{ selector: "a", options: { ignoreHref: true } }],
+  });
 };
