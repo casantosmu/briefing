@@ -1,7 +1,7 @@
 import morphdom from "morphdom";
 
 interface ActionResponse {
-  component: string;
+  target?: string;
   html: string;
 }
 
@@ -17,33 +17,49 @@ document.addEventListener("submit", (event) => {
 
   event.preventDefault();
 
-  executeAction(form).catch(console.error);
+  const submitter = event instanceof SubmitEvent ? event.submitter : null;
+  executeAction(form, submitter).catch(console.error);
 });
 
-const executeAction = async (form: HTMLFormElement): Promise<void> => {
-  const component = form.closest<HTMLElement>("[x-component]");
-  if (!component) {
-    throw new Error("Server action must belong to a component.");
-  }
+const executeAction = async (
+  form: HTMLFormElement,
+  submitter: HTMLElement | null,
+): Promise<void> => {
+  const data = new FormData(form, submitter);
+  const body = new URLSearchParams();
 
-  const data = new FormData(form);
+  data.forEach((value, key) => {
+    if (typeof value === "string") {
+      body.append(key, value);
+    }
+  });
 
   const response = await fetch(form.action, {
-    method: form.method,
-    body: data,
+    method: form.method.toUpperCase(),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body,
   });
+
+  if (!response.ok) {
+    throw new Error(`Server action failed with status ${response.status}.`);
+  }
 
   const result = (await response.json()) as ActionResponse;
 
-  morphComponent(result.component, result.html);
+  const element = getElement(result.target ?? form);
+  morphdom(element, result.html);
 };
 
-const morphComponent = (componentId: string, html: string): void => {
-  const selector = `[x-component="${componentId}"]`;
-  const current = document.querySelector<HTMLElement>(selector);
-  if (!current) {
-    throw new Error(`Component "${componentId}" was not found.`);
+const getElement = (target: string | HTMLElement): HTMLElement => {
+  if (target instanceof HTMLElement) {
+    return target;
   }
 
-  morphdom(current, html);
+  const element = document.getElementById(target);
+  if (!element) {
+    throw new Error(`Target ${target} was not found.`);
+  }
+  return element;
 };

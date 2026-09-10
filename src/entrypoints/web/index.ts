@@ -1,5 +1,6 @@
 import { Pool } from "pg";
 
+import { createArticleInterestPostgres } from "../../db/article-interest.postgres.js";
 import { createFeedPostgres } from "../../db/feed.postgres.js";
 import { createPinoLogger } from "../../logger.pino.js";
 import { createApp } from "../../web/app.js";
@@ -13,12 +14,14 @@ const logger = createPinoLogger({ level: config.logLevel });
 
 const pool = new Pool({ connectionString: config.postgresUrl });
 const feedRepository = createFeedPostgres({ pool });
+const articleInterestRepository = createArticleInterestPostgres({ pool });
 
 const router = createRouter({
   userId: config.userId,
   defaultLocale: config.defaultLocale,
   defaultTimezone: config.defaultTimezone,
   feedRepository,
+  articleInterestRepository,
 });
 const app = createApp({ logger, router });
 const server = createServer({ app, port: config.port });

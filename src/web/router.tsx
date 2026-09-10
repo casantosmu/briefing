@@ -2,17 +2,20 @@ import { type Response, Router } from "express";
 import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
+import type { ArticleInterestRepository } from "../core/article-interest-repository.js";
 import type { FeedRepository } from "../core/feed-repository.js";
 import { createPagination } from "../core/pagination.js";
-import { feedQuerySchema } from "./schemas.js";
+import { articleInterestBodySchema, articleParamsSchema, feedQuerySchema } from "./schemas.js";
 import { MainLayout } from "./views/layout/MainLayout.js";
 import { FeedPage } from "./views/pages/FeedPage.js";
+import { ArticleInterestForm } from "./views/partials/ArticleInterestForm.js";
 
 interface RouterDependencies {
   userId: string;
   defaultLocale: string;
   defaultTimezone: string;
   feedRepository: FeedRepository;
+  articleInterestRepository: ArticleInterestRepository;
 }
 
 export const createRouter = ({
@@ -20,6 +23,7 @@ export const createRouter = ({
   defaultLocale,
   defaultTimezone,
   feedRepository,
+  articleInterestRepository,
 }: RouterDependencies): Router => {
   const router = Router();
 
@@ -46,9 +50,28 @@ export const createRouter = ({
     );
   });
 
+  router.post("/articles/:articleId/interest", async (req, res) => {
+    const { articleId } = articleParamsSchema.parse(req.params);
+    const { interest } = articleInterestBodySchema.parse(req.body);
+
+    const result = await articleInterestRepository.toggle(userId, articleId, interest);
+
+    sendAction(
+      res,
+      <ArticleInterestForm articleId={articleId} interest={result} />,
+    );
+  });
+
   return router;
 };
 
 const sendPage = (res: Response, node: ReactNode) => {
   res.type("html").send(`<!doctype html>${renderToStaticMarkup(node)}`);
+};
+
+const sendAction = (res: Response, node: ReactNode, target?: string) => {
+  res.json({
+    target,
+    html: renderToStaticMarkup(node),
+  });
 };

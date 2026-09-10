@@ -17,6 +17,7 @@ export const createApp = ({ router, logger }: AppDependencies): Express => {
   const app = express();
 
   app.use(createLogMiddleware({ logger }));
+  app.use(express.urlencoded({ extended: false }));
 
   app.use("/assets", express.static(assetsPath));
   app.use("/bootstrap/css", express.static(cssPath));

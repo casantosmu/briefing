@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { ARTICLE_INTERESTS } from "../core/article-interest.js";
+
 const MAX_PAGE_SIZE = 100;
 
 const pageSchema = z.coerce
@@ -17,4 +19,12 @@ const limitSchema = z.coerce
 export const feedQuerySchema = z.object({
   page: pageSchema.default(1),
   limit: limitSchema.default(25),
+});
+
+export const articleParamsSchema = z.object({
+  articleId: z.uuid("Article ID must be a valid UUID"),
+});
+
+export const articleInterestBodySchema = z.object({
+  interest: z.enum(ARTICLE_INTERESTS),
 });

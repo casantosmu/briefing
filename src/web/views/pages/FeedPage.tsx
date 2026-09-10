@@ -1,6 +1,7 @@
 import type { FeedArticle } from "../../../core/feed-article.js";
 import type { Pagination } from "../../../core/pagination.js";
 import { formatReadingTime, htmlToText, truncateText } from "../helpers/text.js";
+import { ArticleInterestForm } from "../partials/ArticleInterestForm.js";
 
 interface FeedPageProps {
   feedArticles: FeedArticle[];
@@ -26,7 +27,12 @@ export const FeedPage = ({ feedArticles, pagination, locale, timezone }: FeedPag
         {feedArticles.map((feedArticle) => (
           <article key={feedArticle.id} className="border-bottom pb-3">
             <h2 className="h5 mb-1">
-              <a href={`/articles/${feedArticle.id}`} className="text-decoration-none">
+              <a
+                href={feedArticle.canonicalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-decoration-none"
+              >
                 {feedArticle.title}
               </a>
             </h2>
@@ -53,6 +59,11 @@ export const FeedPage = ({ feedArticles, pagination, locale, timezone }: FeedPag
                 <span>{feedArticle.tags.map((tag) => tag.name).join(", ")}</span>
               </div>
             )}
+
+            <div className="mt-3">
+              <div className="small fw-semibold mb-2">Interested in this story?</div>
+              <ArticleInterestForm articleId={feedArticle.id} interest={feedArticle.userInterest} />
+            </div>
           </article>
         ))}
       </div>
